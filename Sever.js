@@ -14,6 +14,13 @@ const commandsPath = './Commands';
 // It's declared here, OUTSIDE the try block, so it doesn't get wiped out
 // once loading finishes — it needs to stay alive for the whole life of the bot.
 const commandCollection = new Map();
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
 
 try {
   // WHY await here: readdir returns a Promise, we need the actual filenames
@@ -76,13 +83,6 @@ try {
 // WHY these specific intents: Discord requires you to explicitly ask for
 // permission to receive certain data — here we're asking for server info,
 // messages in servers, and the actual text content of those messages.
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
-});
 
 // Just logs every message's text to your terminal — useful for debugging,
 // not seen by Discord users.
@@ -120,7 +120,7 @@ client.on("interactionCreate", async (interaction) => {
       // WHY pass "interaction" here: the command's execute function needs
       // this object to know WHO ran it, WHAT they typed, and HOW to reply.
       command.execute(interaction)
-      console.log(interaction)
+     
     }
     else{
       // WHY this else matters: if Discord somehow has a command registered
@@ -133,4 +133,6 @@ client.on("interactionCreate", async (interaction) => {
 
 // WHY process.env.DISCORD_TOKEN: keeps the secret token out of the code itself,
 // loaded safely from .env instead — so it's never accidentally shared or committed to GitHub.
+client.command = commandCollection;
+
 client.login(process.env.DISCORD_TOKEN);
