@@ -1,0 +1,17 @@
+{
+  "name": "dis_bot",
+  "version": "1.0.0",
+  "description": "A interactive discort bot",
+  "license": "ISC",
+  "author": "Prakhar Gupta",
+  "type": "module",
+  "main": "Sever.js",
+  "scripts": {
+    "start": "nodemon Sever.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.26.0",
+    "dotenv": "^17.4.2",
+    "nodemon": "^3.1.14"
+  }
+}
