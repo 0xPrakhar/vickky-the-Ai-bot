@@ -18,6 +18,7 @@ export const commands = {
 
 export const execute = async (interaction) => {
   try {
+    await interaction.deferReply();
     const text = interaction.options.getString("text");
 
     const prompt = `Summarize the following text in 2-3 concise sentences. Only return the summary, nothing else: "${text}"`;
@@ -27,7 +28,7 @@ export const execute = async (interaction) => {
       contents: prompt
     });
 
-    await interaction.reply(response.text);
+   await interaction.editReply(response.text);
 
   } catch (error) {
     await interaction.reply("Sorry, something went wrong while talking to the AI. Please try again in a moment.");

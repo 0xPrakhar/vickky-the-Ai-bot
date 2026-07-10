@@ -19,6 +19,7 @@ export const commands = {
 
 export const execute = async(interaction)=>{
 try {
+  await interaction.deferReply();
  const userId = interaction.user.id
  const userHistory = conversationHistory.get(userId)|| [];
  const question=interaction.options.getString("question") 
@@ -27,7 +28,8 @@ try {
       model: 'gemini-flash-latest',// Use the latest flash or pro model
       contents: fullconverstaion
      })
-     await interaction.reply(response.text)
+    //  await interaction.reply(response.text)
+    await interaction.editReply(response.text);
      const finalConversation =[...fullconverstaion,{role:"model", parts:[{text:response.text}]}]
     const trimedresposne= finalConversation.slice(-6)
     conversationHistory.set(userId,trimedresposne)

@@ -24,6 +24,7 @@ export const commands = {
 
 export const execute = async(interaction)=>{
 try {
+  await interaction.deferReply();
     const text=interaction.options.getString("text") 
     const language=interaction.options.getString("language") 
     const prompt = `Translate the following text into ${language}. Only return the translated text, nothing else: "${text}"`
@@ -31,7 +32,8 @@ try {
       model: 'gemini-flash-latest',// Use the latest flash or pro model
       contents:prompt
      })
-     await interaction.reply(response.text)
+    // await interaction.reply(response.text)
+    await interaction.editReply(response.text);
 
 } catch (error) {
     await interaction.reply("Sorry, something went wrong while talking to the AI. Please try again in a moment.");

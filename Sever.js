@@ -143,6 +143,6 @@ client.on("interactionCreate", async (interaction) => {
 
 // WHY process.env.DISCORD_TOKEN: keeps the secret token out of the code itself,
 // loaded safely from .env instead — so it's never accidentally shared or committed to GitHub.
-client.command = commandCollection;
+client.commands = commandCollection;
 
 client.login(process.env.DISCORD_TOKEN);
