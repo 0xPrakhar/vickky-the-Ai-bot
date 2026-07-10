@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 // Initialize the client. It automatically picks up the process.env.GEMINI_API_KEY
 const ai = new GoogleGenAI({ apiKey: process.env.AI_API_KEY });
+const conversationHistory= new Map()
 export const commands = {
   name: "ask",
   description: "Ask the AI anything ",
@@ -18,13 +19,18 @@ export const commands = {
 
 export const execute = async(interaction)=>{
 try {
-    const question=interaction.options.getString("question") 
+ const userId = interaction.user.id
+ const userHistory = conversationHistory.get(userId)|| [];
+ const question=interaction.options.getString("question") 
+ const fullconverstaion = [...userHistory, {role:"user", parts:[{text:question}]}];
      const response = await ai.models.generateContent({
       model: 'gemini-flash-latest',// Use the latest flash or pro model
-      contents: question
+      contents: fullconverstaion
      })
      await interaction.reply(response.text)
-
+     const finalConversation =[...fullconverstaion,{role:"model", parts:[{text:response.text}]}]
+    const trimedresposne= finalConversation.slice(-6)
+    conversationHistory.set(userId,trimedresposne)
 } catch (error) {
     await interaction.reply("Sorry, something went wrong while talking to the AI. Please try again in a moment.");
      console.error("Error calling Gemini API:", error);
