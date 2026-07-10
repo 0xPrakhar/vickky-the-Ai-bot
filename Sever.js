@@ -84,20 +84,30 @@ try {
 // permission to receive certain data — here we're asking for server info,
 // messages in servers, and the actual text content of those messages.
 
-// Just logs every message's text to your terminal — useful for debugging,
-// not seen by Discord users.
-client.on('messageCreate', (msg) => {
-  console.log(msg.content);
-});
+// // Just logs every message's text to your terminal — useful for debugging,
+// // not seen by Discord users.
+// client.on('messageCreate', (msg) => {
+//   console.log(msg.content);
+// });
 
 // WHY the bot-check: without "if (msg.author.bot) return", the bot could
 // end up replying to itself (or other bots) in an infinite loop.
+// Tracks which users have already been greeted, so we only welcome them once
+// Lives outside the listener so it persists for the whole life of the bot
+const greetedUsers = new Map();
+
 client.on('messageCreate', (msg) => {
- if(msg.author.bot) return;
- 
+  if (msg.author.bot) return;
+
+  // Check if this user has already been greeted
+  if (!greetedUsers.has(msg.author.id)) {
     msg.reply({
-    content:"Hello,folks"
-  })
+      content: `Welcome, ${msg.author.username}! 👋 I'm Vickky, your friendly AI-powered assistant here. Type \`/help\` anytime to see everything I can do — from answering questions to translating text and more!`
+    });
+
+    // Mark this user as greeted, so they won't get this message again
+    greetedUsers.set(msg.author.id, true);
+  }
 });
 
 
